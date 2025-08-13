@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Download, FileText, Calendar, BarChart3 } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
+import { toast } from "@/components/ui/sonner";
 
 const reportTemplates = [
   {
@@ -75,42 +77,72 @@ const recentReports = [
 ];
 
 export default function Reports() {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  
   const totalReports = reportTemplates.length;
   const monthlyReports = reportTemplates.filter(r => r.frequency === "Monthly").length;
   const recentCount = recentReports.length;
 
+  const handleGenerateReport = async (templateName: string) => {
+    setIsGenerating(true);
+    toast.success(`Generating ${templateName}...`);
+    
+    setTimeout(() => {
+      setIsGenerating(false);
+      toast.success(`${templateName} generated successfully!`);
+    }, 2000);
+  };
+
+  const handleDownloadReport = async (reportId: string, reportName: string) => {
+    setDownloadingId(reportId);
+    toast.success(`Downloading ${reportName}...`);
+    
+    setTimeout(() => {
+      setDownloadingId(null);
+      toast.success(`${reportName} downloaded successfully!`);
+    }, 1500);
+  };
+
+  const handleGenerateCustomReport = () => {
+    toast.success("Opening custom report builder...");
+    // This would typically open a modal or navigate to a report builder
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Reports</h1>
+          <h1 className="text-4xl font-bold gradient-text">Reports</h1>
           <p className="text-muted-foreground">Generate and manage GRC reports and documentation</p>
         </div>
-        <Button>
+        <Button className="button-glow" onClick={handleGenerateCustomReport}>
           <FileText className="mr-2 h-4 w-4" />
           Generate Custom Report
         </Button>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Report Templates"
           value={totalReports}
           description="Available templates"
           icon={FileText}
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Monthly Reports"
           value={monthlyReports}
           description="Automated monthly"
           icon={Calendar}
+          className="hover:-rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Recent Reports"
           value={recentCount}
           description="Generated this week"
           icon={BarChart3}
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Total Downloads"
@@ -118,33 +150,40 @@ export default function Reports() {
           description="This month"
           icon={Download}
           variant="success"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
       </div>
 
       {/* Report Templates */}
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <CardTitle>Report Templates</CardTitle>
           <CardDescription>
             Pre-configured report templates for different GRC areas
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shimmer">
           <div className="grid gap-4 md:grid-cols-2">
             {reportTemplates.map((template) => (
-              <div key={template.id} className="p-4 border rounded-lg space-y-3">
+              <div key={template.id} className="p-4 border rounded-lg space-y-3 hover-scale interactive-card">
                 <div className="flex items-start justify-between">
                   <div>
                     <h4 className="font-medium">{template.name}</h4>
                     <p className="text-sm text-muted-foreground">{template.description}</p>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="button-glow"
+                    onClick={() => handleGenerateReport(template.name)}
+                    disabled={isGenerating}
+                  >
                     <FileText className="h-4 w-4 mr-2" />
-                    Generate
+                    {isGenerating ? "Generating..." : "Generate"}
                   </Button>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <Badge variant="outline">{template.category}</Badge>
+                  <Badge variant="outline" className="pulse-glow">{template.category}</Badge>
                   <span className="text-muted-foreground">{template.frequency}</span>
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -157,14 +196,14 @@ export default function Reports() {
       </Card>
 
       {/* Recent Reports */}
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <CardTitle>Recent Reports</CardTitle>
           <CardDescription>
             Recently generated reports available for download
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shimmer">
           <Table>
             <TableHeader>
               <TableRow>
@@ -178,18 +217,24 @@ export default function Reports() {
             </TableHeader>
             <TableBody>
               {recentReports.map((report) => (
-                <TableRow key={report.id}>
+                <TableRow key={report.id} className="hover:bg-accent/10 transition-colors duration-200">
                   <TableCell className="font-medium">{report.id}</TableCell>
                   <TableCell>{report.name}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{report.type}</Badge>
+                    <Badge variant="outline" className="pulse-glow">{report.type}</Badge>
                   </TableCell>
                   <TableCell>{report.generatedBy}</TableCell>
                   <TableCell>{report.generatedAt}</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="button-glow"
+                      onClick={() => handleDownloadReport(report.id, report.name)}
+                      disabled={downloadingId === report.id}
+                    >
                       <Download className="h-4 w-4 mr-2" />
-                      Download
+                      {downloadingId === report.id ? "Downloading..." : "Download"}
                     </Button>
                   </TableCell>
                 </TableRow>

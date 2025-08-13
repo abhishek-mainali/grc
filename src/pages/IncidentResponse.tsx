@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -10,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, AlertTriangle, Clock, CheckCircle, Activity } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { StatusBadge } from "@/components/StatusBadge";
+import { toast } from "@/components/ui/sonner";
 
 const mockIncidents = [
   {
@@ -50,27 +52,65 @@ const mockIncidents = [
 export default function IncidentResponse() {
   const [incidents, setIncidents] = useState(mockIncidents);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [newIncident, setNewIncident] = useState({
+    title: "",
+    description: "",
+    severity: "",
+    assignee: ""
+  });
+  const navigate = useNavigate();
 
   const totalIncidents = incidents.length;
   const openIncidents = incidents.filter(i => i.status === "open").length;
   const criticalIncidents = incidents.filter(i => i.severity === "critical").length;
   const avgResponseTime = "2.5h";
 
+  const handleLogIncident = async () => {
+    if (!newIncident.title || !newIncident.description || !newIncident.severity || !newIncident.assignee) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    setIsLoading(true);
+    toast.success("Logging incident...");
+    
+    // Simulate API call
+    setTimeout(() => {
+      const incident = {
+        id: `INC${String(incidents.length + 1).padStart(3, '0')}`,
+        title: newIncident.title,
+        description: newIncident.description,
+        severity: newIncident.severity as "critical" | "high" | "medium" | "low",
+        status: "open" as const,
+        reporter: "User",
+        assignee: newIncident.assignee,
+        createdAt: new Date().toLocaleString(),
+        updatedAt: new Date().toLocaleString()
+      };
+      
+      setIncidents([incident, ...incidents]);
+      setNewIncident({ title: "", description: "", severity: "", assignee: "" });
+      setIsCreateDialogOpen(false);
+      setIsLoading(false);
+      toast.success("Incident logged successfully!");
+    }, 1000);
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Incident Response</h1>
+          <h1 className="text-4xl font-bold gradient-text">Incident Response</h1>
           <p className="text-muted-foreground">Track and manage security incidents and responses</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="button-glow">
               <Plus className="mr-2 h-4 w-4" />
               Log Incident
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[525px]">
+          <DialogContent className="sm:max-w-[525px] glass-effect">
             <DialogHeader>
               <DialogTitle>Log New Incident</DialogTitle>
               <DialogDescription>
@@ -80,16 +120,26 @@ export default function IncidentResponse() {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="title">Incident Title</Label>
-                <Input id="title" placeholder="Brief description of the incident" />
+                <Input 
+                  id="title" 
+                  placeholder="Brief description of the incident" 
+                  value={newIncident.title}
+                  onChange={(e) => setNewIncident({...newIncident, title: e.target.value})}
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="description">Description</Label>
-                <Textarea id="description" placeholder="Detailed description of the incident" />
+                <Textarea 
+                  id="description" 
+                  placeholder="Detailed description of the incident" 
+                  value={newIncident.description}
+                  onChange={(e) => setNewIncident({...newIncident, description: e.target.value})}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label htmlFor="severity">Severity</Label>
-                  <Select>
+                  <Select value={newIncident.severity} onValueChange={(value) => setNewIncident({...newIncident, severity: value})}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select severity" />
                     </SelectTrigger>
@@ -103,14 +153,14 @@ export default function IncidentResponse() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="assignee">Assignee</Label>
-                  <Select>
+                  <Select value={newIncident.assignee} onValueChange={(value) => setNewIncident({...newIncident, assignee: value})}>
                     <SelectTrigger>
                       <SelectValue placeholder="Assign to team" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="security">Security Team</SelectItem>
-                      <SelectItem value="infrastructure">Infrastructure Team</SelectItem>
-                      <SelectItem value="compliance">Compliance Team</SelectItem>
+                      <SelectItem value="Security Team">Security Team</SelectItem>
+                      <SelectItem value="Infrastructure Team">Infrastructure Team</SelectItem>
+                      <SelectItem value="Compliance Team">Compliance Team</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -120,8 +170,8 @@ export default function IncidentResponse() {
               <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => setIsCreateDialogOpen(false)}>
-                Log Incident
+              <Button onClick={handleLogIncident} disabled={isLoading} className="button-glow">
+                {isLoading ? "Logging..." : "Log Incident"}
               </Button>
             </div>
           </DialogContent>
@@ -129,12 +179,13 @@ export default function IncidentResponse() {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Incidents"
           value={totalIncidents}
           description="All time incidents"
           icon={AlertTriangle}
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Open Incidents"
@@ -142,6 +193,7 @@ export default function IncidentResponse() {
           description="Currently active"
           icon={Activity}
           variant="warning"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Critical Incidents"
@@ -149,6 +201,7 @@ export default function IncidentResponse() {
           description="Highest priority"
           icon={AlertTriangle}
           variant="destructive"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Avg Response Time"
@@ -156,18 +209,19 @@ export default function IncidentResponse() {
           description="Time to first response"
           icon={Clock}
           variant="success"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
       </div>
 
       {/* Incidents Table */}
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <CardTitle>Recent Incidents</CardTitle>
           <CardDescription>
             Latest security incidents and their current status
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shimmer">
           <Table>
             <TableHeader>
               <TableRow>
@@ -181,7 +235,7 @@ export default function IncidentResponse() {
             </TableHeader>
             <TableBody>
               {incidents.map((incident) => (
-                <TableRow key={incident.id}>
+                <TableRow key={incident.id} className="hover:bg-accent/10 transition-colors duration-200">
                   <TableCell className="font-medium">{incident.id}</TableCell>
                   <TableCell>
                     <div>

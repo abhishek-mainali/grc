@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CheckSquare, FileCheck, AlertCircle, Clock } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { StatusBadge } from "@/components/StatusBadge";
+import { toast } from "@/components/ui/sonner";
 
 const complianceFrameworks = [
   {
@@ -64,43 +66,57 @@ const recentControls = [
 ];
 
 export default function ComplianceTracking() {
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  
   const totalControls = complianceFrameworks.reduce((sum, framework) => sum + framework.totalControls, 0);
   const compliantControls = complianceFrameworks.reduce((sum, framework) => sum + framework.compliantControls, 0);
   const overallCompliance = Math.round((compliantControls / totalControls) * 100);
 
+  const handleGenerateReport = async () => {
+    setIsGeneratingReport(true);
+    toast.success("Generating compliance report...");
+    
+    setTimeout(() => {
+      setIsGeneratingReport(false);
+      toast.success("Compliance report generated successfully!");
+    }, 2000);
+  };
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Compliance Tracking</h1>
+          <h1 className="text-4xl font-bold gradient-text">Compliance Tracking</h1>
           <p className="text-muted-foreground">Monitor compliance status across all frameworks</p>
         </div>
-        <Button>
+        <Button className="button-glow" onClick={handleGenerateReport} disabled={isGeneratingReport}>
           <FileCheck className="mr-2 h-4 w-4" />
-          Generate Report
+          {isGeneratingReport ? "Generating..." : "Generate Report"}
         </Button>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Overall Compliance"
           value={`${overallCompliance}%`}
           description="Across all frameworks"
           icon={CheckSquare}
           variant="success"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Active Frameworks"
           value={complianceFrameworks.length}
           description="Currently monitored"
           icon={FileCheck}
+          className="hover:-rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Total Controls"
           value={totalControls}
           description="Compliance requirements"
           icon={CheckSquare}
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Pending Reviews"
@@ -108,13 +124,14 @@ export default function ComplianceTracking() {
           description="Due this month"
           icon={Clock}
           variant="warning"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
       </div>
 
       {/* Compliance Frameworks */}
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         {complianceFrameworks.map((framework) => (
-          <Card key={framework.name}>
+          <Card key={framework.name} className="glass-effect interactive-card">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 {framework.name}
@@ -124,18 +141,18 @@ export default function ComplianceTracking() {
                 Next audit: {framework.nextAudit}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 shimmer">
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span>Compliance Progress</span>
-                  <span>{framework.progress}%</span>
+                  <span className="pulse-glow">{framework.progress}%</span>
                 </div>
-                <Progress value={framework.progress} className="h-2" />
+                <Progress value={framework.progress} className="h-2 animate-pulse" />
               </div>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <div className="text-muted-foreground">Compliant</div>
-                  <div className="font-semibold text-success">{framework.compliantControls}</div>
+                  <div className="font-semibold text-success pulse-glow">{framework.compliantControls}</div>
                 </div>
                 <div>
                   <div className="text-muted-foreground">Total Controls</div>
@@ -148,14 +165,14 @@ export default function ComplianceTracking() {
       </div>
 
       {/* Recent Control Reviews */}
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <CardTitle>Recent Control Reviews</CardTitle>
           <CardDescription>
             Latest updates on compliance controls and their status
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shimmer">
           <Table>
             <TableHeader>
               <TableRow>
@@ -169,7 +186,7 @@ export default function ComplianceTracking() {
             </TableHeader>
             <TableBody>
               {recentControls.map((control) => (
-                <TableRow key={control.id}>
+                <TableRow key={control.id} className="hover:bg-accent/10 transition-colors duration-200">
                   <TableCell className="font-medium">{control.id}</TableCell>
                   <TableCell>{control.name}</TableCell>
                   <TableCell>{control.framework}</TableCell>

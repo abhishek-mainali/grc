@@ -36,15 +36,15 @@ export function MetricCard({
   };
 
   return (
-    <Card className={cn(variantClasses[variant], "card-hover animate-fade-in", className)}>
+    <Card className={cn(variantClasses[variant], "card-hover animate-fade-in interactive-card group", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className={cn("h-4 w-4 animate-glow-pulse", iconClasses[variant])} />
+        <Icon className={cn("h-4 w-4 animate-glow-pulse group-hover:scale-110 transition-transform duration-300", iconClasses[variant])} />
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold hover-scale">{value}</div>
+        <div className="text-2xl font-bold hover-scale group-hover:text-primary transition-colors duration-300">{value}</div>
         {description && (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
             {description}
           </p>
         )}

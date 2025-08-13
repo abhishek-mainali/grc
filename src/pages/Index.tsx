@@ -1,9 +1,12 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Shield, AlertTriangle, CheckSquare, Search, Activity, TrendingUp, TrendingDown } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { StatusBadge } from "@/components/StatusBadge";
+import { toast } from "@/components/ui/sonner";
 
 const recentActivities = [
   {
@@ -37,27 +40,55 @@ const recentActivities = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleViewAllActivities = async () => {
+    setIsLoading(true);
+    toast.success("Loading all activities...");
+    // Simulate loading
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success("Activities loaded successfully!");
+    }, 1000);
+  };
+
+  const handleQuickAction = async (action: string, path: string) => {
+    setIsLoading(true);
+    toast.success(`Initiating ${action}...`);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigate(path);
+      toast.success(`${action} ready!`);
+    }, 800);
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold animate-scale-in">Dashboard</h1>
-          <p className="text-muted-foreground">Overview of your governance, risk, and compliance status</p>
+          <h1 className="text-4xl font-bold gradient-text animate-scale-in floating-animation">Dashboard</h1>
+          <p className="text-muted-foreground text-lg">Overview of your governance, risk, and compliance status</p>
         </div>
-        <Button className="button-glow">
+        <Button 
+          className="button-glow status-indicator" 
+          onClick={handleViewAllActivities}
+          disabled={isLoading}
+        >
           <Activity className="mr-2 h-4 w-4" />
-          View All Activities
+          {isLoading ? "Loading..." : "View All Activities"}
         </Button>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Risks"
           value="47"
           description="12 high priority"
           icon={Shield}
           variant="warning"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Compliance Score"
@@ -65,6 +96,7 @@ const Index = () => {
           description="+5% from last month"
           icon={CheckSquare}
           variant="success"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Open Incidents"
@@ -72,6 +104,7 @@ const Index = () => {
           description="1 critical, 2 medium"
           icon={AlertTriangle}
           variant="destructive"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Vulnerabilities"
@@ -79,93 +112,94 @@ const Index = () => {
           description="8 require attention"
           icon={Search}
           variant="warning"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
       </div>
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         {/* Risk Summary */}
-        <Card className="card-hover animate-fade-in">
+        <Card className="card-hover animate-fade-in glass-effect">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Shield className="mr-2 h-5 w-5 text-primary" />
+              <Shield className="mr-2 h-5 w-5 text-primary animate-glow-pulse" />
               Risk Summary
             </CardTitle>
             <CardDescription>Current risk landscape overview</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 shimmer">
             <div className="flex items-center justify-between">
               <span className="text-sm">Critical Risks</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium">5</span>
-                <TrendingDown className="h-4 w-4 text-success" />
+                <TrendingDown className="h-4 w-4 text-success animate-bounce" />
               </div>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">High Risks</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium">12</span>
-                <TrendingUp className="h-4 w-4 text-destructive" />
+                <TrendingUp className="h-4 w-4 text-destructive animate-bounce" />
               </div>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Medium Risks</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium">18</span>
-                <TrendingDown className="h-4 w-4 text-success" />
+                <TrendingDown className="h-4 w-4 text-success animate-bounce" />
               </div>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Low Risks</span>
               <div className="flex items-center space-x-2">
                 <span className="text-sm font-medium">12</span>
-                <TrendingUp className="h-4 w-4 text-info" />
+                <TrendingUp className="h-4 w-4 text-info animate-bounce" />
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Compliance Status */}
-        <Card className="card-hover animate-fade-in">
+        <Card className="card-hover animate-fade-in glass-effect">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <CheckSquare className="mr-2 h-5 w-5 text-primary" />
+              <CheckSquare className="mr-2 h-5 w-5 text-primary animate-glow-pulse" />
               Compliance Status
             </CardTitle>
             <CardDescription>Framework compliance overview</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 shimmer">
             <div className="flex items-center justify-between">
               <span className="text-sm">SOC 2 Type II</span>
-              <span className="text-sm font-medium text-success">85%</span>
+              <span className="text-sm font-medium text-success pulse-glow">85%</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">ISO 27001</span>
-              <span className="text-sm font-medium text-success">92%</span>
+              <span className="text-sm font-medium text-success pulse-glow">92%</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">GDPR</span>
-              <span className="text-sm font-medium text-warning">78%</span>
+              <span className="text-sm font-medium text-warning pulse-glow">78%</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">HIPAA</span>
-              <span className="text-sm font-medium text-success">88%</span>
+              <span className="text-sm font-medium text-success pulse-glow">88%</span>
             </div>
           </CardContent>
         </Card>
 
         {/* Recent Activities */}
-        <Card className="card-hover animate-fade-in">
+        <Card className="card-hover animate-fade-in glass-effect">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Activity className="mr-2 h-5 w-5 text-primary" />
+              <Activity className="mr-2 h-5 w-5 text-primary animate-glow-pulse" />
               Recent Activities
             </CardTitle>
             <CardDescription>Latest system activities and updates</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="shimmer">
             <div className="space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3">
+                <div key={activity.id} className="flex items-start space-x-3 hover-scale p-2 rounded-lg hover:bg-accent/10">
                   <div className="flex-shrink-0">
                     <StatusBadge status={activity.severity} />
                   </div>
@@ -183,53 +217,73 @@ const Index = () => {
 
       {/* Quick Actions & Upcoming Tasks */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="card-hover animate-fade-in">
+        <Card className="card-hover animate-fade-in glass-effect">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Commonly used actions and shortcuts</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Button variant="outline" className="justify-start hover-glow">
+            <Button 
+              variant="outline" 
+              className="justify-start hover-glow" 
+              onClick={() => handleQuickAction("Create New Risk", "/risks")}
+              disabled={isLoading}
+            >
               <Shield className="mr-2 h-4 w-4" />
               Create New Risk
             </Button>
-            <Button variant="outline" className="justify-start hover-glow">
+            <Button 
+              variant="outline" 
+              className="justify-start hover-glow"
+              onClick={() => handleQuickAction("Log Incident", "/incidents")}
+              disabled={isLoading}
+            >
               <AlertTriangle className="mr-2 h-4 w-4" />
               Log Incident
             </Button>
-            <Button variant="outline" className="justify-start hover-glow">
+            <Button 
+              variant="outline" 
+              className="justify-start hover-glow"
+              onClick={() => handleQuickAction("Run Vulnerability Scan", "/vulnerabilities")}
+              disabled={isLoading}
+            >
               <Search className="mr-2 h-4 w-4" />
               Run Vulnerability Scan
             </Button>
-            <Button variant="outline" className="justify-start hover-glow">
+            <Button 
+              variant="outline" 
+              className="justify-start hover-glow"
+              onClick={() => handleQuickAction("Generate Compliance Report", "/reports")}
+              disabled={isLoading}
+            >
               <CheckSquare className="mr-2 h-4 w-4" />
               Generate Compliance Report
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="card-hover animate-fade-in">
+        <Card className="card-hover animate-fade-in glass-effect">
           <CardHeader>
             <CardTitle>Upcoming Tasks</CardTitle>
             <CardDescription>Important deadlines and scheduled activities</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="shimmer">
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow interactive-card">
                 <div>
                   <p className="text-sm font-medium">SOC 2 Audit Preparation</p>
                   <p className="text-xs text-muted-foreground">Due in 15 days</p>
                 </div>
                 <StatusBadge status="medium" />
               </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow interactive-card">
                 <div>
                   <p className="text-sm font-medium">Quarterly Risk Assessment</p>
                   <p className="text-xs text-muted-foreground">Due in 8 days</p>
                 </div>
                 <StatusBadge status="high" />
               </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow interactive-card">
                 <div>
                   <p className="text-sm font-medium">Security Training Update</p>
                   <p className="text-xs text-muted-foreground">Due in 22 days</p>

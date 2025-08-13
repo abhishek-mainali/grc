@@ -36,19 +36,20 @@ export default function Analytics() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Analytics & Insights</h1>
+          <h1 className="text-4xl font-bold gradient-text">Analytics & Insights</h1>
           <p className="text-muted-foreground">Data-driven insights into your GRC performance</p>
         </div>
       </div>
 
       {/* Key Performance Indicators */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Risk Reduction"
           value={riskReduction}
           description="Last 6 months"
           icon={TrendingDown}
           variant="success"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Compliance Improvement"
@@ -56,6 +57,7 @@ export default function Analytics() {
           description="Quarter over quarter"
           icon={TrendingUp}
           variant="success"
+          className="hover:-rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Response Time"
@@ -63,45 +65,47 @@ export default function Analytics() {
           description="Faster incident response"
           icon={BarChart3}
           variant="success"
+          className="hover:rotate-1 transition-transform duration-300"
         />
         <MetricCard
           title="Active Frameworks"
           value="4"
           description="Compliance frameworks"
           icon={PieChart}
+          className="hover:-rotate-1 transition-transform duration-300"
         />
       </div>
 
       {/* Risk Analytics */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="glass-effect">
           <CardHeader>
             <CardTitle>Risk Trend Analysis</CardTitle>
             <CardDescription>
               Risk levels over the past 6 months
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="shimmer">
             <div className="space-y-4">
               {riskTrends.map((month) => (
-                <div key={month.month} className="flex items-center space-x-4">
+                <div key={month.month} className="flex items-center space-x-4 hover-scale p-2 rounded-lg hover:bg-accent/10">
                   <div className="w-12 text-sm font-medium">{month.month}</div>
                   <div className="flex-1 flex space-x-2">
                     <div className="flex-1 bg-destructive/20 rounded-full h-2 relative">
                       <div 
-                        className="bg-destructive rounded-full h-2" 
+                        className="bg-destructive rounded-full h-2 animate-pulse" 
                         style={{ width: `${(month.high / 30) * 100}%` }}
                       />
                     </div>
                     <div className="flex-1 bg-warning/20 rounded-full h-2 relative">
                       <div 
-                        className="bg-warning rounded-full h-2" 
+                        className="bg-warning rounded-full h-2 animate-pulse" 
                         style={{ width: `${(month.medium / 40) * 100}%` }}
                       />
                     </div>
                     <div className="flex-1 bg-success/20 rounded-full h-2 relative">
                       <div 
-                        className="bg-success rounded-full h-2" 
+                        className="bg-success rounded-full h-2 animate-pulse" 
                         style={{ width: `${(month.low / 30) * 100}%` }}
                       />
                     </div>
@@ -114,53 +118,53 @@ export default function Analytics() {
             </div>
             <div className="flex justify-center space-x-6 mt-4 text-sm">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-destructive rounded-full" />
+                <div className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
                 <span>High Risk</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-warning rounded-full" />
+                <div className="w-3 h-3 bg-warning rounded-full animate-pulse" />
                 <span>Medium Risk</span>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-success rounded-full" />
+                <div className="w-3 h-3 bg-success rounded-full animate-pulse" />
                 <span>Low Risk</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-effect">
           <CardHeader>
             <CardTitle>Incident Response Metrics</CardTitle>
             <CardDescription>
               Performance metrics for incident handling
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 shimmer">
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold">{incidentMetrics.total}</div>
+                <div className="text-2xl font-bold pulse-glow">{incidentMetrics.total}</div>
                 <div className="text-sm text-muted-foreground">Total Incidents</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-success">{incidentMetrics.resolved}</div>
+                <div className="text-2xl font-bold text-success pulse-glow">{incidentMetrics.resolved}</div>
                 <div className="text-sm text-muted-foreground">Resolved</div>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Resolution Rate</span>
-                <span>{Math.round((incidentMetrics.resolved / incidentMetrics.total) * 100)}%</span>
+                <span className="pulse-glow">{Math.round((incidentMetrics.resolved / incidentMetrics.total) * 100)}%</span>
               </div>
-              <Progress value={(incidentMetrics.resolved / incidentMetrics.total) * 100} />
+              <Progress value={(incidentMetrics.resolved / incidentMetrics.total) * 100} className="animate-pulse" />
             </div>
             <div className="grid grid-cols-2 gap-4 text-center">
               <div>
-                <div className="text-lg font-semibold">{incidentMetrics.avgResolutionTime}</div>
+                <div className="text-lg font-semibold pulse-glow">{incidentMetrics.avgResolutionTime}</div>
                 <div className="text-sm text-muted-foreground">Avg Resolution Time</div>
               </div>
               <div>
-                <div className="text-lg font-semibold text-destructive">{incidentMetrics.criticalIncidents}</div>
+                <div className="text-lg font-semibold text-destructive pulse-glow">{incidentMetrics.criticalIncidents}</div>
                 <div className="text-sm text-muted-foreground">Critical Incidents</div>
               </div>
             </div>
@@ -169,24 +173,24 @@ export default function Analytics() {
       </div>
 
       {/* Compliance Progress */}
-      <Card>
+      <Card className="glass-effect">
         <CardHeader>
           <CardTitle>Compliance Framework Progress</CardTitle>
           <CardDescription>
             Current compliance status across all frameworks
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="shimmer">
           <div className="space-y-6">
             {complianceMetrics.map((metric) => (
-              <div key={metric.framework} className="space-y-2">
+              <div key={metric.framework} className="space-y-2 hover-scale p-2 rounded-lg hover:bg-accent/10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="font-medium">{metric.framework}</span>
                     {metric.trend === "up" ? (
-                      <TrendingUp className="h-4 w-4 text-success" />
+                      <TrendingUp className="h-4 w-4 text-success animate-bounce" />
                     ) : (
-                      <TrendingDown className="h-4 w-4 text-destructive" />
+                      <TrendingDown className="h-4 w-4 text-destructive animate-bounce" />
                     )}
                   </div>
                   <div className="text-sm text-muted-foreground">
@@ -194,9 +198,9 @@ export default function Analytics() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Progress value={metric.current} className="h-2" />
+                  <Progress value={metric.current} className="h-2 animate-pulse" />
                   <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Current: {metric.current}%</span>
+                    <span className="pulse-glow">Current: {metric.current}%</span>
                     <span>Target: {metric.target}%</span>
                   </div>
                 </div>

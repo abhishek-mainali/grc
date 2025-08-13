@@ -128,18 +128,69 @@ All colors MUST be HSL.
   }
   
   .hover-scale {
-    @apply transition-transform duration-200 hover:scale-105;
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
   }
   
   .hover-glow {
-    @apply transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.3)];
+    @apply transition-all duration-300 hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] hover:brightness-110;
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_hsl(var(--primary)/0.2)];
+    @apply transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_25px_50px_-12px_hsl(var(--primary)/0.3)] hover:border-primary/20;
   }
 
   .button-glow {
-    @apply transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)] hover:scale-105;
+    @apply transition-all duration-300 hover:shadow-[0_0_25px_hsl(var(--primary)/0.5)] hover:scale-105 hover:brightness-110 active:scale-95;
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .floating-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .pulse-glow {
+    @apply animate-pulse shadow-[0_0_20px_hsl(var(--primary)/0.3)];
+  }
+
+  .interactive-card {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_40px_-10px_hsl(var(--primary)/0.2)] hover:border-primary/30 cursor-pointer;
+  }
+
+  .status-indicator {
+    @apply relative;
+  }
+
+  .status-indicator::before {
+    content: '';
+    @apply absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full animate-ping;
+  }
+
+  .status-indicator::after {
+    content: '';
+    @apply absolute -top-1 -right-1 w-3 h-3 bg-success rounded-full;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
   }
 }
