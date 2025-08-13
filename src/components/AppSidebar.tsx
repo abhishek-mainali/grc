@@ -55,14 +55,14 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar className={isCollapsed ? "w-16" : "w-64"} collapsible="icon">
-      <SidebarHeader className="border-b border-border p-4">
+    <Sidebar className={isCollapsed ? "w-16" : "w-64 animate-slide-in-right"} collapsible="icon">
+      <SidebarHeader className="border-b border-border p-4 animate-fade-in">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-            <Shield className="h-5 w-5 text-primary-foreground" />
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center hover-glow">
+            <Shield className="h-5 w-5 text-primary-foreground animate-glow-pulse" />
           </div>
           {!isCollapsed && (
-            <div>
+            <div className="animate-fade-in">
               <h2 className="text-lg font-semibold">GRC Platform</h2>
               <p className="text-xs text-muted-foreground">Governance, Risk & Compliance</p>
             </div>
@@ -70,15 +70,15 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="animate-fade-in">
         <SidebarGroup>
           <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {navigationItems.map((item, index) => (
+                <SidebarMenuItem key={item.title} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavClass(item.url)}>
+                    <NavLink to={item.url} className={`${getNavClass(item.url)} hover-scale hover-glow`}>
                       <item.icon className="h-4 w-4" />
                       {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>
@@ -93,10 +93,10 @@ export function AppSidebar() {
           <SidebarGroupLabel>System</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {settingsItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {settingsItems.map((item, index) => (
+                <SidebarMenuItem key={item.title} className="animate-fade-in" style={{ animationDelay: `${(navigationItems.length + index) * 0.1}s` }}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} className={getNavClass(item.url)}>
+                    <NavLink to={item.url} className={`${getNavClass(item.url)} hover-scale hover-glow`}>
                       <item.icon className="h-4 w-4" />
                       {!isCollapsed && <span>{item.title}</span>}
                     </NavLink>

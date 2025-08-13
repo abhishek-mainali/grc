@@ -27,11 +27,11 @@ const App = () => (
           <div className="min-h-screen flex w-full bg-background">
             <AppSidebar />
             <div className="flex-1 flex flex-col">
-              <header className="h-12 flex items-center border-b border-border bg-card px-4">
-                <SidebarTrigger className="mr-4" />
+              <header className="h-12 flex items-center border-b border-border bg-card px-4 animate-fade-in">
+                <SidebarTrigger className="mr-4 button-glow" />
                 <h1 className="font-semibold text-foreground">GRC Management Platform</h1>
               </header>
-              <main className="flex-1 p-6">
+              <main className="flex-1 p-6 animate-fade-in">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/risks" element={<RiskManagement />} />

@@ -38,13 +38,13 @@ const recentActivities = [
 
 const Index = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold animate-scale-in">Dashboard</h1>
           <p className="text-muted-foreground">Overview of your governance, risk, and compliance status</p>
         </div>
-        <Button>
+        <Button className="button-glow">
           <Activity className="mr-2 h-4 w-4" />
           View All Activities
         </Button>
@@ -84,10 +84,10 @@ const Index = () => {
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         {/* Risk Summary */}
-        <Card>
+        <Card className="card-hover animate-fade-in">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Shield className="mr-2 h-5 w-5" />
+              <Shield className="mr-2 h-5 w-5 text-primary" />
               Risk Summary
             </CardTitle>
             <CardDescription>Current risk landscape overview</CardDescription>
@@ -125,10 +125,10 @@ const Index = () => {
         </Card>
 
         {/* Compliance Status */}
-        <Card>
+        <Card className="card-hover animate-fade-in">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <CheckSquare className="mr-2 h-5 w-5" />
+              <CheckSquare className="mr-2 h-5 w-5 text-primary" />
               Compliance Status
             </CardTitle>
             <CardDescription>Framework compliance overview</CardDescription>
@@ -154,10 +154,10 @@ const Index = () => {
         </Card>
 
         {/* Recent Activities */}
-        <Card>
+        <Card className="card-hover animate-fade-in">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Activity className="mr-2 h-5 w-5" />
+              <Activity className="mr-2 h-5 w-5 text-primary" />
               Recent Activities
             </CardTitle>
             <CardDescription>Latest system activities and updates</CardDescription>
@@ -183,53 +183,53 @@ const Index = () => {
 
       {/* Quick Actions & Upcoming Tasks */}
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="card-hover animate-fade-in">
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Commonly used actions and shortcuts</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            <Button variant="outline" className="justify-start">
+            <Button variant="outline" className="justify-start hover-glow">
               <Shield className="mr-2 h-4 w-4" />
               Create New Risk
             </Button>
-            <Button variant="outline" className="justify-start">
+            <Button variant="outline" className="justify-start hover-glow">
               <AlertTriangle className="mr-2 h-4 w-4" />
               Log Incident
             </Button>
-            <Button variant="outline" className="justify-start">
+            <Button variant="outline" className="justify-start hover-glow">
               <Search className="mr-2 h-4 w-4" />
               Run Vulnerability Scan
             </Button>
-            <Button variant="outline" className="justify-start">
+            <Button variant="outline" className="justify-start hover-glow">
               <CheckSquare className="mr-2 h-4 w-4" />
               Generate Compliance Report
             </Button>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-hover animate-fade-in">
           <CardHeader>
             <CardTitle>Upcoming Tasks</CardTitle>
             <CardDescription>Important deadlines and scheduled activities</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
                 <div>
                   <p className="text-sm font-medium">SOC 2 Audit Preparation</p>
                   <p className="text-xs text-muted-foreground">Due in 15 days</p>
                 </div>
                 <StatusBadge status="medium" />
               </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
                 <div>
                   <p className="text-sm font-medium">Quarterly Risk Assessment</p>
                   <p className="text-xs text-muted-foreground">Due in 8 days</p>
                 </div>
                 <StatusBadge status="high" />
               </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
+              <div className="flex items-center justify-between p-3 border rounded-lg hover-scale hover-glow">
                 <div>
                   <p className="text-sm font-medium">Security Training Update</p>
                   <p className="text-xs text-muted-foreground">Due in 22 days</p>
